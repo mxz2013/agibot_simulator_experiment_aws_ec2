@@ -1,14 +1,16 @@
 # AGIBOT GenieSim on AWS EC2 Experiment
 
-This document summarizes the current state of the AGIBOT GenieSim experiment on AWS EC2. It is intended as a handoff for people who want to reproduce the setup, continue the simulation work, or extend it into a complete benchmark run.
+This document summarizes the current state of the AGIBOT GenieSim experiment on AWS EC2. It is intended as a handoff for collaborators who want to reproduce the setup, continue the simulation work, or extend it into a complete benchmark run.
 
 ## Objective
 
 Run an AGIBOT GenieSim simulation on an AWS EC2 GPU instance and view the Isaac Sim scene from a local machine through Isaac Sim WebRTC Streaming Client.
 
-Reference tutorial:
+Reference documentation:
 
-https://agibot-world.com/sim-evaluation/docs/#/v3?id=_312-run-a-simulation-task
+- AGIBOT simulation tutorial: https://agibot-world.com/sim-evaluation/docs/#/v3?id=_312-run-a-simulation-task
+- Isaac Sim requirements: https://docs.isaacsim.omniverse.nvidia.com/latest/installation/requirements.html
+- Isaac Sim livestream clients: https://docs.isaacsim.omniverse.nvidia.com/6.0.0/installation/manual_livestream_clients.html
 
 ## Current Result
 
@@ -17,8 +19,7 @@ The working setup reached this state:
 - Isaac Sim 5.1.0 runs headless in Docker on an AWS `g6e.2xlarge` instance.
 - Docker can access the NVIDIA L40S GPU through the NVIDIA runtime.
 - GenieSim can start inside the Docker environment.
-- The Isaac Sim / GenieSim scene can be viewed from a MacBook, or any local machine that supports Isaac Sim WebRTC Streaming Client:
-  https://docs.isaacsim.omniverse.nvidia.com/6.0.0/installation/manual_livestream_clients.html
+- The Isaac Sim / GenieSim scene can be viewed from a MacBook, or any local machine that supports Isaac Sim WebRTC Streaming Client.
 - The viewer is useful for inspecting the scene, but it is not the robot control interface.
 
 The main remaining gap is policy execution. The tested GenieSim configuration expects an inference server at `localhost:8999`. Without that policy server, the scene can load, but the robot does not perform useful benchmark actions.
@@ -56,7 +57,7 @@ Follow the runbooks in this order.
 
 ### 1. Install and Validate Isaac Sim
 
-Use `installation_g6e.2xlarge.md`.
+Use `installation_g6e.2xlarge.md`. For the official hardware and software requirements, also see the Isaac Sim requirements link above.
 
 This runbook covers:
 
@@ -69,7 +70,7 @@ This runbook covers:
 - starting Isaac Sim in livestream mode
 - connecting from Isaac Sim WebRTC Streaming Client
 
-Success criterion:
+Success criteria:
 
 - `nvidia-smi` works on the host and inside Docker
 - Isaac Sim starts headless without RTX renderer crashes
@@ -79,7 +80,7 @@ Success criterion:
 
 Use `configure_genie_sim.md`.
 
-In the tested workflow, I connected VS Code to the EC2 instance over SSH, installed the Codex extension in VS Code, and completed the configuration with Codex's help. In principle, a future maintainer can give `configure_genie_sim.md` to Codex as context and ask it to reproduce the configuration on a new instance.
+In the tested workflow, I connected VS Code to the EC2 instance over SSH, installed the Codex extension in VS Code, and completed the configuration with Codex's help. A future maintainer can use `configure_genie_sim.md` as Codex context and ask it to reproduce the configuration on a new instance.
 
 This runbook covers:
 
@@ -87,11 +88,11 @@ This runbook covers:
 - opening the required EC2 network ports
 - starting the GenieSim WebRTC container
 - running the WebRTC demo script
-- connecting from the MacBook viewer
+- connecting from the local WebRTC viewer
 - distinguishing viewer access from robot control
 - troubleshooting empty stages, stale streams, missing assets, and policy-server issues
 
-Success criterion:
+Success criteria:
 
 - the WebRTC client connects to the GenieSim stream
 - the scene loads with real USD assets, not Git LFS pointer files
